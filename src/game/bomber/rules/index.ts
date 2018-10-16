@@ -1,0 +1,6 @@
+export { default as hands } from './hands.rules'
+export { default as bombs } from './bombs.rules'
+export { default as bombSpawn } from './bomb-spawn.rules'
+export { default as bombOutOfBounds } from './bomb-out-of-bounds.rules'
+export { default as crossesMovements } from './crosses.rules'
+export { default as bombCatch } from './bomb-catch.rules'
