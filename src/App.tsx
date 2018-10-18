@@ -113,14 +113,18 @@ class App extends React.Component<{}, IGameState> {
         this.newGame()
     }
 
-    // TODO levels - hands moves
+    // TODO BOMB falling speed
+    // TODO 10 levels, titles, start & passing
     // TODO hitboxes && check width/height - not working correctly?
-    // TODO hands "speed" props
-    // TODO difficulty factors with levels
     // TODO scores
     // TODO bonuses types & sprites
     // TODO bonuses collisions
     // TODO bonuses timing & factors
+    // TODO menu
+
+    // TODO v.1.1
+    // TODO user levels (cpy paste)
+    // TODO contributors levels
 
     public onMouseMove = ({ screenX }: MouseEvent): void => {
         this.setState({

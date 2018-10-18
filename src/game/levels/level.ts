@@ -47,7 +47,7 @@ export const sampleLevel: ILevel = {
         ],
         ...[
             {
-                time: 1000,
+                time: 500,
                 drop: DropTypes.Bomb,
             },
             {
