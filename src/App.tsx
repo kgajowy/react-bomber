@@ -1,5 +1,4 @@
 import * as React from 'react'
-import './App.css'
 import { Bomb } from './game/bomber/bomb/Bomb'
 import { Explosion } from './game/bomber/bomb/Explosion'
 import { Bucket } from './game/bomber/bucket/Bucket'
@@ -14,7 +13,9 @@ import {
     hands as handsMovements
 } from './game/bomber/rules'
 import Game from './game/Game'
+import { ILevel, sampleLevel } from './game/levels/level'
 import { ISprite } from './game/util/sprite'
+import { PlayButton } from './menu/PlayButton'
 
 export interface IGameState {
     running: boolean,
@@ -28,7 +29,9 @@ export interface IGameState {
     settings: {
         width: number,
         height: number,
-    }
+    },
+    levels: ILevel[],
+    currentLevel: ILevel,
 }
 
 class App extends React.Component<any, IGameState> {
@@ -51,13 +54,13 @@ class App extends React.Component<any, IGameState> {
         },
         bombs: [],
         crosses: [],
+        levels: [],
+        currentLevel: sampleLevel,
     }
 
     private requestId: number
 
-    private rules = [
-        bombsMovement, bombSpawn, handsMovements, bombOutOfBounds, crossesMovements, bombCatch
-    ]
+    private rules: any[] = []
 
     public componentWillUnmount() {
         cancelAnimationFrame(this.requestId)
@@ -73,10 +76,14 @@ class App extends React.Component<any, IGameState> {
         const tick = (time: number) => {
             const deltaTime = time - this.state.time
             const newStateBase: IGameState = { ...this.state, time, deltaTime }
-            const newState = this.rules.reduce((acc, rule) => ({
+            const newState: IGameState = this.rules.reduce((acc, rule) => ({
                 ...acc,
                 ...rule(acc)
             }), newStateBase)
+
+            if (newState.lives === 0) {
+                this.stopGame()
+            }
 
             this.setState(newState,
                 scheduleNextTick,
@@ -86,13 +93,13 @@ class App extends React.Component<any, IGameState> {
             this.requestId = requestAnimationFrame(tick)
         }
         scheduleNextTick()
+
+        this.newGame()
     }
 
-    // TODO pallet & movements
-    // TODO pallet collisions
+    // TODO levels
     // TODO hitboxes && check width/height - not working correctly?
     // TODO hands "speed" props
-    // TODO levels
     // TODO difficulty factors with levels
     // TODO scores
     // TODO bonuses types & sprites
@@ -105,10 +112,23 @@ class App extends React.Component<any, IGameState> {
         })
     }
 
+    public newGame = (): void => {
+        this.rules = [
+            bombsMovement, bombSpawn, handsMovements, bombOutOfBounds, crossesMovements, bombCatch
+        ]
+        this.setState({
+            lives: 5,
+            bombs: [],
+            crosses: [],
+            time: 0,
+            deltaTime: 0,
+        })
+    }
+
     public render() {
         const { time, deltaTime, hands, bombs, crosses, lives, settings, mouseX } = this.state
         return (
-            <div className="App">
+            <div>
                 Time {time}<br/>
                 delta time {deltaTime}<br/>
                 <Game width={settings.width} height={settings.height} backgroundColor={'yellow'}>
@@ -120,8 +140,26 @@ class App extends React.Component<any, IGameState> {
                     }
                     <Bucket y={400} x={mouseX}/>
                 </Game>
+                {lives === 0 &&
+                <div style={{
+                    position: 'absolute',
+                    top: window.innerHeight / 2,
+                    left: 0,
+                    width: settings.width,
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    textAlign: 'center'
+                }}>
+                    <PlayButton text={'Restart?'} onClick={this.newGame}/>
+
+                </div>
+                }
             </div>
         )
+    }
+
+    private stopGame = (): void => {
+        this.rules = [ bombsMovement, bombOutOfBounds, crossesMovements ] // even tho its game over, keep some moves
     }
 
     private onKeyDown = () => undefined
