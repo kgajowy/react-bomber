@@ -13,9 +13,9 @@ import {
     hands as handsMovements
 } from './game/bomber/rules'
 import Game from './game/Game'
-import { IDrop, ILevel, sampleLevel } from './game/levels/level'
+import { IDrop, ILevel, IMove, sampleLevel } from './game/levels/level'
 import { ISprite } from './game/util/sprite'
-import { isBombEvent, isDropEvent } from './game/util/types'
+import { isBombEvent, isDropEvent, isMoveEvent } from './game/util/types'
 import { PlayButton } from './menu/PlayButton'
 
 interface IRunningLevel {
@@ -23,8 +23,8 @@ interface IRunningLevel {
     spawns: {
         bombs: IDrop[],
         bonuses: IDrop[],
-    }
-
+    },
+    moves: IMove[]
 }
 
 export interface IGameState {
@@ -113,7 +113,7 @@ class App extends React.Component<{}, IGameState> {
         this.newGame()
     }
 
-    // TODO levels
+    // TODO levels - hands moves
     // TODO hitboxes && check width/height - not working correctly?
     // TODO hands "speed" props
     // TODO difficulty factors with levels
@@ -185,7 +185,8 @@ class App extends React.Component<{}, IGameState> {
             spawns: {
                 bombs: source.triggers.filter(event => isDropEvent(event) && isBombEvent(event)) as IDrop[],
                 bonuses: [],
-            }
+            },
+            moves: source.triggers.filter(event => isMoveEvent(event)) as IMove[],
         }
     }
 
