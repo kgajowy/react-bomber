@@ -13,13 +13,24 @@ import {
     hands as handsMovements
 } from './game/bomber/rules'
 import Game from './game/Game'
-import { ILevel, sampleLevel } from './game/levels/level'
+import { IDrop, ILevel, sampleLevel } from './game/levels/level'
 import { ISprite } from './game/util/sprite'
+import { isBombEvent, isDropEvent } from './game/util/types'
 import { PlayButton } from './menu/PlayButton'
+
+interface IRunningLevel {
+    ref: ILevel,
+    spawns: {
+        bombs: IDrop[],
+        bonuses: IDrop[],
+    }
+
+}
 
 export interface IGameState {
     running: boolean,
     time: number,
+    gameTime: number,
     deltaTime: number,
     hands: ISprite,
     bombs: ISprite[],
@@ -31,36 +42,41 @@ export interface IGameState {
         height: number,
     },
     levels: ILevel[],
-    currentLevel: ILevel,
+    level: IRunningLevel,
 }
 
-class App extends React.Component<any, IGameState> {
-
-    public state = {
-        running: true,
-        time: 0,
-        deltaTime: 0,
-        mouseX: 350,
-        settings: {
-            width: 700,
-            height: 500,
-        },
-        lives: 5,
-        hands: {
-            x: 350,
-            y: 100,
-            w: 60,
-            h: 60,
-        },
-        bombs: [],
-        crosses: [],
-        levels: [],
-        currentLevel: sampleLevel,
-    }
+class App extends React.Component<{}, IGameState> {
 
     private requestId: number
 
     private rules: any[] = []
+
+    public constructor(props: {}) {
+        super(props)
+
+        this.state = {
+            running: true,
+            time: 0,
+            gameTime: 0,
+            deltaTime: 0,
+            mouseX: 350,
+            settings: {
+                width: 700,
+                height: 500,
+            },
+            lives: 5,
+            hands: {
+                x: 350,
+                y: 100,
+                w: 60,
+                h: 60,
+            },
+            bombs: [],
+            crosses: [],
+            levels: [],
+            level: this.prepareLevel(sampleLevel)
+        }
+    }
 
     public componentWillUnmount() {
         cancelAnimationFrame(this.requestId)
@@ -75,7 +91,7 @@ class App extends React.Component<any, IGameState> {
         let scheduleNextTick: () => void
         const tick = (time: number) => {
             const deltaTime = time - this.state.time
-            const newStateBase: IGameState = { ...this.state, time, deltaTime }
+            const newStateBase: IGameState = { ...this.state, time, deltaTime, gameTime: this.state.gameTime + deltaTime }
             const newState: IGameState = this.rules.reduce((acc, rule) => ({
                 ...acc,
                 ...rule(acc)
@@ -120,17 +136,17 @@ class App extends React.Component<any, IGameState> {
             lives: 5,
             bombs: [],
             crosses: [],
-            time: 0,
+            gameTime: 0,
             deltaTime: 0,
+            level: this.prepareLevel(sampleLevel),
         })
+
     }
 
     public render() {
-        const { time, deltaTime, hands, bombs, crosses, lives, settings, mouseX } = this.state
+        const { hands, bombs, crosses, lives, settings, mouseX } = this.state
         return (
             <div>
-                Time {time}<br/>
-                delta time {deltaTime}<br/>
                 <Game width={settings.width} height={settings.height} backgroundColor={'yellow'}>
                     <Hands {...hands}/>
                     {bombs.map((b, i) => <Bomb {...b} key={i}/>)}
@@ -160,6 +176,17 @@ class App extends React.Component<any, IGameState> {
 
     private stopGame = (): void => {
         this.rules = [ bombsMovement, bombOutOfBounds, crossesMovements ] // even tho its game over, keep some moves
+    }
+
+    private prepareLevel = (source: ILevel) : IRunningLevel => {
+
+        return {
+            ref: source,
+            spawns: {
+                bombs: source.triggers.filter(event => isDropEvent(event) && isBombEvent(event)) as IDrop[],
+                bonuses: [],
+            }
+        }
     }
 
     private onKeyDown = () => undefined

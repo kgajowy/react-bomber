@@ -1,29 +1,17 @@
 import { IGameState } from '../../../App'
-import { DropTypes, IDrop, IEvent } from '../../levels/level'
 
-
-function isDropEvent(event: IEvent): event is IDrop {
-    return (event as IDrop).drop !== undefined;
-}
-
-function isBombEvent({drop}: IDrop) : boolean {
-    return drop === DropTypes.Bomb
-}
-
-
-export default ({ time, bombs, hands, currentLevel }: IGameState): Partial<IGameState> => {
-    // TODO make a 'computed' lists to avoid filtering in each loop
-    // @ts-ignore not sure why this warning is there ...
-    const bombSpawnEvents : IDrop[] = currentLevel.triggers.filter(event => isDropEvent(event) && isBombEvent(event))
-    if (bombSpawnEvents.length === 0) {
+export default ({ gameTime, bombs, hands, level }: IGameState): Partial<IGameState> => {
+    if (level.spawns.bombs.length === 0) {
         return {}
     }
-    const nextEvent = bombSpawnEvents[0]
+    const nextEvent = level.spawns.bombs[ 0 ]
 
-
-    if (nextEvent.time <= time) {
-        bombSpawnEvents.shift()
-        return { bombs: [ ...bombs, { x: hands.x, y: hands.y } ], currentLevel: {...currentLevel, triggers: bombSpawnEvents} }
+    if (nextEvent.time <= gameTime) {
+        level.spawns.bombs.shift()
+        return {
+            bombs: [ ...bombs, { x: hands.x, y: hands.y } ],
+            level: { ...level, spawns: { ...level.spawns, bombs: level.spawns.bombs } }
+        }
     } else {
         return { bombs: [ ...bombs ] }
     }
