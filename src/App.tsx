@@ -113,7 +113,7 @@ class App extends React.Component<{}, IGameState> {
         this.newGame()
     }
 
-    // TODO BOMB falling speed
+
     // TODO 10 levels, titles, start & passing
     // TODO hitboxes && check width/height - not working correctly?
     // TODO scores
@@ -168,7 +168,7 @@ class App extends React.Component<{}, IGameState> {
                     width: settings.width,
                     marginLeft: 'auto',
                     marginRight: 'auto',
-                    textAlign: 'center'
+                    textAlign: 'center',
                 }}>
                     <PlayButton text={'Restart?'} onClick={this.newGame}/>
 

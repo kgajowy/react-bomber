@@ -22,6 +22,11 @@ export interface IDrop extends IEvent {
      */
     drop: DropTypes,
 
+    /**
+     * @speed - pixels per second
+     */
+    speed: number,
+
 }
 
 export type EventTypes = IDrop | IMove
@@ -49,33 +54,41 @@ export const sampleLevel: ILevel = {
             {
                 time: 500,
                 drop: DropTypes.Bomb,
+                speed: 50,
             },
             {
                 time: 1500,
                 drop: DropTypes.Bomb,
+                speed: 100,
             },
             {
                 time: 2000,
                 drop: DropTypes.Bomb,
+                speed: 200,
             },
             {
                 time: 2600,
                 drop: DropTypes.Bomb,
+                speed: 300,
             },
             {
                 time: 2700,
                 drop: DropTypes.Bomb,
+                speed: 400,
             },
             {
                 time: 4000,
                 drop: DropTypes.Bomb,
+                speed: 200,
             },
             {
                 time: 5000,
                 drop: DropTypes.Bomb,
+                speed: 200,
             },
         ], ...new Array(50).fill(0).map((_, i) => ({
             time: 6000 + i * 1000 + (Math.random() * 500),
             drop: DropTypes.Bomb,
+            speed: 200,
         })) ]
 }
