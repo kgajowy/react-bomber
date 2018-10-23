@@ -1,9 +1,10 @@
 {
   "main.css": "static/css/main.65027555.css",
   "main.css.map": "static/css/main.65027555.css.map",
-  "main.js": "static/js/main.f1389edb.js",
-  "main.js.map": "static/js/main.f1389edb.js.map",
-  "static/media/bomb.svg": "static/media/bomb.a5d9233a.svg",
+  "main.js": "static/js/main.54814f79.js",
+  "main.js.map": "static/js/main.54814f79.js.map",
+  "static/media/bomb-fire.svg": "static/media/bomb-fire.cbfbdfcb.svg",
+  "static/media/bomb.svg": "static/media/bomb.91f80d93.svg",
   "static/media/bucket.svg": "static/media/bucket.3677156d.svg",
   "static/media/cross.svg": "static/media/cross.6a91493d.svg",
   "static/media/hands.png": "static/media/hands.a66a47dd.png",
