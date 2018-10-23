@@ -26,11 +26,11 @@ export interface IGameState {
     time: number,
     gameTime: number,
     deltaTime: number,
+    bucket: ISprite,
     hands: ISprite,
     bombs: ISprite[],
     crosses: ISprite[],
     lives: number,
-    mouseX: number,
     settings: {
         width: number,
         height: number,
@@ -38,6 +38,9 @@ export interface IGameState {
     levels: ILevel[],
     level: IRunningLevel | undefined,
     won: boolean,
+    debug: {
+        collisions: boolean,
+    }
 }
 
 class App extends React.Component<{}, IGameState> {
@@ -54,7 +57,6 @@ class App extends React.Component<{}, IGameState> {
             time: 0,
             gameTime: 0,
             deltaTime: 0,
-            mouseX: 350,
             settings: {
                 width: 700,
                 height: 500,
@@ -66,11 +68,20 @@ class App extends React.Component<{}, IGameState> {
                 w: 60,
                 h: 60,
             },
+            bucket: {
+                x: 350,
+                y: 450,
+                w: 48,
+                h: 48,
+            },
             bombs: [],
             crosses: [],
             levels: Campaign.levels,
             level: undefined,
             won: false,
+            debug: {
+                collisions: true,
+            }
         }
     }
 
@@ -114,13 +125,12 @@ class App extends React.Component<{}, IGameState> {
         this.newGame()
     }
 
-
-    // TODO 10 levels
-    // TODO hitboxes && check width/height - not working correctly?
+    // TODO background & misc graphics ?
     // TODO scores
     // TODO bonuses types & sprites
     // TODO bonuses collisions
     // TODO bonuses timing & factors
+    // TODO 10 levels
     // TODO menu
 
     // TODO v.1.1
@@ -129,7 +139,10 @@ class App extends React.Component<{}, IGameState> {
 
     public onMouseMove = ({ screenX }: MouseEvent): void => {
         this.setState({
-            mouseX: screenX
+            bucket: {
+                ...this.state.bucket,
+                x: screenX,
+            }
         })
     }
 
@@ -151,16 +164,16 @@ class App extends React.Component<{}, IGameState> {
     }
 
     public render() {
-        const { hands, bombs, crosses, lives, settings, mouseX, level = { ref: { name: 'Game' }} } = this.state
+        const { hands, bucket, bombs, crosses, lives, settings, level = { ref: { name: 'Game' }}, debug } = this.state
         return (
             <div>
                 <Game width={settings.width} height={settings.height} backgroundColor={'yellow'}>
-                    <Hands {...hands}/>
-                    {bombs.map((b, i) => <Bomb {...b} key={i}/>)}
+                    <Hands {...hands} debug={debug.collisions}/>
+                    {bombs.map((b, i) => <Bomb {...b} key={i} debug={debug.collisions}/>)}
                     {crosses.map((c, i) => <Explosion {...c} key={i}/>)}
-                    {  new Array(lives).fill(0).map((_, i) => <Life y={20} x={settings.width - (i + 1) * 36} key={i}/>) }
+                    {  new Array(lives).fill(0).map((_, i) => <Life y={20} x={settings.width - (i + 1) * 36} w={32} h={32} key={i}/>) }
                     {<text x="20" y="30">{level.ref.name}</text>}
-                    <Bucket y={400} x={mouseX}/>
+                    <Bucket {...bucket} debug={debug.collisions}/>
                 </Game>
                 {lives === 0 &&
                 <div style={{
