@@ -2,7 +2,7 @@ import { IGameState } from '../../../App'
 import { Direction } from '../../util/direction'
 
 export default ({ gameTime, bombs, hands, level }: IGameState): Partial<IGameState> => {
-    if (level.spawns.bombs.length === 0) {
+    if (!level || level.spawns.bombs.length === 0) {
         return {}
     }
     const nextEvent = level.spawns.bombs[ 0 ]

@@ -1,7 +1,7 @@
 import { IGameState } from '../../../App'
 
 export default ({ gameTime, deltaTime, hands, level, settings }: IGameState): Partial<IGameState> => {
-    if (level.moves.length === 0) {
+    if (!level || level.moves.length === 0) {
         return {}
     }
 

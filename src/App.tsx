@@ -10,22 +10,16 @@ import {
     bombs as bombsMovement,
     bombSpawn,
     crossesMovements,
-    hands as handsMovements
+    hands as handsMovements,
+    levelProgress
 } from './game/bomber/rules'
 import Game from './game/Game'
-import { IDrop, ILevel, IMove, sampleLevel } from './game/levels/level'
+import { Campaign } from './game/levels/campaign'
+import { ILevel } from './game/levels/level'
+import { IRunningLevel, prepareLevel } from './game/levels/util'
 import { ISprite } from './game/util/sprite'
-import { isBombEvent, isDropEvent, isMoveEvent } from './game/util/types'
 import { PlayButton } from './menu/PlayButton'
 
-interface IRunningLevel {
-    ref: ILevel,
-    spawns: {
-        bombs: IDrop[],
-        bonuses: IDrop[],
-    },
-    moves: IMove[]
-}
 
 export interface IGameState {
     running: boolean,
@@ -42,7 +36,8 @@ export interface IGameState {
         height: number,
     },
     levels: ILevel[],
-    level: IRunningLevel,
+    level: IRunningLevel | undefined,
+    won: boolean,
 }
 
 class App extends React.Component<{}, IGameState> {
@@ -73,8 +68,9 @@ class App extends React.Component<{}, IGameState> {
             },
             bombs: [],
             crosses: [],
-            levels: [],
-            level: this.prepareLevel(sampleLevel)
+            levels: Campaign.levels,
+            level: undefined,
+            won: false,
         }
     }
 
@@ -91,7 +87,12 @@ class App extends React.Component<{}, IGameState> {
         let scheduleNextTick: () => void
         const tick = (time: number) => {
             const deltaTime = time - this.state.time
-            const newStateBase: IGameState = { ...this.state, time, deltaTime, gameTime: this.state.gameTime + deltaTime }
+            const newStateBase: IGameState = {
+                ...this.state,
+                time,
+                deltaTime,
+                gameTime: this.state.gameTime + deltaTime
+            }
             const newState: IGameState = this.rules.reduce((acc, rule) => ({
                 ...acc,
                 ...rule(acc)
@@ -114,7 +115,7 @@ class App extends React.Component<{}, IGameState> {
     }
 
 
-    // TODO 10 levels, titles, start & passing
+    // TODO 10 levels
     // TODO hitboxes && check width/height - not working correctly?
     // TODO scores
     // TODO bonuses types & sprites
@@ -134,30 +135,31 @@ class App extends React.Component<{}, IGameState> {
 
     public newGame = (): void => {
         this.rules = [
-            bombsMovement, bombSpawn, handsMovements, bombOutOfBounds, crossesMovements, bombCatch
+            bombsMovement, bombSpawn, handsMovements, bombOutOfBounds, crossesMovements, bombCatch, levelProgress
         ]
+        const [ firstLevel, ...rest ] = Campaign.levels
         this.setState({
             lives: 5,
             bombs: [],
             crosses: [],
             gameTime: 0,
             deltaTime: 0,
-            level: this.prepareLevel(sampleLevel),
+            level: prepareLevel(firstLevel),
+            levels: rest,
         })
 
     }
 
     public render() {
-        const { hands, bombs, crosses, lives, settings, mouseX } = this.state
+        const { hands, bombs, crosses, lives, settings, mouseX, level = { ref: { name: 'Game' }} } = this.state
         return (
             <div>
                 <Game width={settings.width} height={settings.height} backgroundColor={'yellow'}>
                     <Hands {...hands}/>
                     {bombs.map((b, i) => <Bomb {...b} key={i}/>)}
                     {crosses.map((c, i) => <Explosion {...c} key={i}/>)}
-                    {
-                        new Array(lives).fill(0).map((_, i) => <Life y={20} x={settings.width - (i + 1) * 36} key={i}/>)
-                    }
+                    {  new Array(lives).fill(0).map((_, i) => <Life y={20} x={settings.width - (i + 1) * 36} key={i}/>) }
+                    {<text x="20" y="30">{level.ref.name}</text>}
                     <Bucket y={400} x={mouseX}/>
                 </Game>
                 {lives === 0 &&
@@ -182,17 +184,6 @@ class App extends React.Component<{}, IGameState> {
         this.rules = [ bombsMovement, bombOutOfBounds, crossesMovements ] // even tho its game over, keep some moves
     }
 
-    private prepareLevel = (source: ILevel) : IRunningLevel => {
-
-        return {
-            ref: source,
-            spawns: {
-                bombs: source.triggers.filter(event => isDropEvent(event) && isBombEvent(event)) as IDrop[],
-                bonuses: [],
-            },
-            moves: source.triggers.filter(event => isMoveEvent(event)) as IMove[],
-        }
-    }
 
     private onKeyDown = () => undefined
 
