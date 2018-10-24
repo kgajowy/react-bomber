@@ -2,7 +2,7 @@ import { IGameState } from '../../../App'
 import { ISprite } from '../../util/sprite'
 import { CrossSprite } from '../bomb/Explosion'
 
-export default ({ bombs, crosses, settings, lives }: IGameState): Partial<IGameState> => {
+export default ({ bombs, crosses, settings, lives, stats }: IGameState): Partial<IGameState> => {
     const newBombs : ISprite[] = []
     const newCrosses: ISprite[] = []
 
@@ -15,6 +15,7 @@ export default ({ bombs, crosses, settings, lives }: IGameState): Partial<IGameS
                 h: CrossSprite.h,
             })
             --lives
+            ++stats.bombsMissed
         } else {
             newBombs.push(b)
         }
@@ -24,5 +25,8 @@ export default ({ bombs, crosses, settings, lives }: IGameState): Partial<IGameS
         bombs: newBombs,
         crosses: [...crosses, ...newCrosses],
         lives: Math.max(0, lives),
+        stats: {
+            ...stats,
+        }
     }
 }

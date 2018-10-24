@@ -40,6 +40,11 @@ export interface IGameState {
     },
     levels: ILevel[],
     level: IRunningLevel | undefined,
+    stats: {
+        bombsCaught: number,
+        bombsMissed: number,
+        points: number,
+    },
     won: boolean,
     debug: {
         collisions: boolean,
@@ -82,6 +87,11 @@ class App extends React.Component<IAppProps, IGameState> {
             levels: Campaign.levels,
             level: undefined,
             won: false,
+            stats: {
+                bombsCaught: 0,
+                bombsMissed: 0,
+                points: 0,
+            },
             debug: {
                 collisions: false,
             }
@@ -139,7 +149,7 @@ class App extends React.Component<IAppProps, IGameState> {
     }
 
     // TODO background & misc graphics ?
-    // TODO scores
+
     // TODO bonuses types & sprites
     // TODO bonuses collisions
     // TODO bonuses timing & factors
@@ -172,12 +182,17 @@ class App extends React.Component<IAppProps, IGameState> {
             deltaTime: 0,
             level: prepareLevel(firstLevel),
             levels: rest,
+            stats: {
+                bombsCaught: 0,
+                bombsMissed: 0,
+                points: 0,
+            },
         })
 
     }
 
     public render() {
-        const { hands, bucket, bombs, crosses, lives, settings, level = { ref: { name: 'Game' } }, debug } = this.state
+        const { hands, bucket, bombs, crosses, lives, settings, level = { ref: { name: 'Game' } }, debug, stats } = this.state
         return (
             <>
                 <Game width={settings.width} height={settings.height}>
@@ -186,7 +201,9 @@ class App extends React.Component<IAppProps, IGameState> {
                     {crosses.map((c, i) => <Explosion {...c} key={i}/>)}
                     {new Array(lives).fill(0).map((_, i) => <Life y={20} x={settings.width - (i + 1) * 36} w={32} h={32}
                                                                   key={i}/>)}
+
                     {<text x="20" y="30">{level.ref.name}</text>}
+                    {<text x="20" y="50">{stats.points} (acc {((100 * stats.bombsCaught/(stats.bombsMissed+stats.bombsCaught)) || 100).toFixed(2)} %)</text>}
                     <Bucket {...bucket} debug={debug.collisions}/>
                 </Game>
                 {lives === 0 &&

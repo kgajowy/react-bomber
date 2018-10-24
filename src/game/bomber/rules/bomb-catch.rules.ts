@@ -7,16 +7,22 @@ const bombCollides = (bomb: ISprite, bucket: ISprite) =>
     bomb.y + bomb.h / 2 >= bucket.y - bucket.h / 2 &&
     bomb.y - bomb.h / 2 <= bucket.y + bucket.h / 2
 
-export default ({ bombs, bucket }: IGameState): Partial<IGameState> => {
+export default ({ bombs, bucket, stats }: IGameState): Partial<IGameState> => {
     const newBombs: ISprite[] = []
 
     for (const b of bombs) {
         if (!bombCollides(b, bucket)) {
             newBombs.push(b)
+        } else {
+            ++stats.bombsCaught
+            stats.points += 100
         }
     }
 
     return {
-        bombs: newBombs
+        bombs: newBombs,
+        stats: {
+            ...stats,
+        }
     }
 }
