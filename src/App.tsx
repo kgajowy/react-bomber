@@ -20,6 +20,9 @@ import { IRunningLevel, prepareLevel } from './game/levels/util'
 import { ISprite } from './game/util/sprite'
 import { PlayButton } from './menu/PlayButton'
 
+export interface IAppProps {
+    debugMode: boolean
+}
 
 export interface IGameState {
     running: boolean,
@@ -43,13 +46,13 @@ export interface IGameState {
     }
 }
 
-class App extends React.Component<{}, IGameState> {
+class App extends React.Component<IAppProps, IGameState> {
 
     private requestId: number
 
     private rules: any[] = []
 
-    public constructor(props: {}) {
+    public constructor(props: IAppProps) {
         super(props)
 
         this.state = {
@@ -80,7 +83,7 @@ class App extends React.Component<{}, IGameState> {
             level: undefined,
             won: false,
             debug: {
-                collisions: true,
+                collisions: false,
             }
         }
     }
@@ -89,6 +92,16 @@ class App extends React.Component<{}, IGameState> {
         cancelAnimationFrame(this.requestId)
         document.removeEventListener('keydown', this.onKeyDown)
         document.removeEventListener('mousemove', this.onMouseMove)
+    }
+
+    public componentWillReceiveProps(nextProps: IAppProps) {
+        if (this.state.debug.collisions !== nextProps.debugMode) {
+            this.setState({
+                debug: {
+                    collisions: nextProps.debugMode
+                }
+            })
+        }
     }
 
     public componentDidMount() {
@@ -164,14 +177,15 @@ class App extends React.Component<{}, IGameState> {
     }
 
     public render() {
-        const { hands, bucket, bombs, crosses, lives, settings, level = { ref: { name: 'Game' }}, debug } = this.state
+        const { hands, bucket, bombs, crosses, lives, settings, level = { ref: { name: 'Game' } }, debug } = this.state
         return (
-            <div>
-                <Game width={settings.width} height={settings.height} backgroundColor={'yellow'}>
+            <>
+                <Game width={settings.width} height={settings.height}>
                     <Hands {...hands} debug={debug.collisions}/>
                     {bombs.map((b, i) => <Bomb {...b} key={i} debug={debug.collisions}/>)}
                     {crosses.map((c, i) => <Explosion {...c} key={i}/>)}
-                    {  new Array(lives).fill(0).map((_, i) => <Life y={20} x={settings.width - (i + 1) * 36} w={32} h={32} key={i}/>) }
+                    {new Array(lives).fill(0).map((_, i) => <Life y={20} x={settings.width - (i + 1) * 36} w={32} h={32}
+                                                                  key={i}/>)}
                     {<text x="20" y="30">{level.ref.name}</text>}
                     <Bucket {...bucket} debug={debug.collisions}/>
                 </Game>
@@ -189,7 +203,7 @@ class App extends React.Component<{}, IGameState> {
 
                 </div>
                 }
-            </div>
+            </>
         )
     }
 

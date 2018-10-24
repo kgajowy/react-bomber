@@ -11,7 +11,7 @@ export default class Game extends React.Component<IGameProps> {
     public static defaultProps = {
         height: 480,
         width: 640,
-        backgroundColor: 'white'
+        backgroundColor: 'transparent'
     }
 
     public render() {
