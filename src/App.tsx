@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Bomb } from './game/bomber/bomb/Bomb'
 import { Explosion } from './game/bomber/bomb/Explosion'
+import { DoubleScore } from './game/bomber/bonus/DoubleScore'
 import { Bucket } from './game/bomber/bucket/Bucket'
 import { Hands } from './game/bomber/hands/Hands'
 import { Life } from './game/bomber/life/Life'
@@ -8,7 +9,7 @@ import {
     bombCatch,
     bombOutOfBounds,
     bombs as bombsMovement,
-    bombSpawn,
+    bombSpawn, bonusMoves, bonusSpawns,
     crossesMovements,
     hands as handsMovements,
     levelProgress
@@ -33,6 +34,7 @@ export interface IGameState {
     hands: ISprite,
     bombs: ISprite[],
     crosses: ISprite[],
+    bonuses: ISprite[],
     lives: number,
     settings: {
         width: number,
@@ -84,6 +86,7 @@ class App extends React.Component<IAppProps, IGameState> {
             },
             bombs: [],
             crosses: [],
+            bonuses: [],
             levels: Campaign.levels,
             level: undefined,
             won: false,
@@ -150,7 +153,6 @@ class App extends React.Component<IAppProps, IGameState> {
 
     // TODO background & misc graphics ?
 
-    // TODO bonuses types & sprites
     // TODO bonuses collisions
     // TODO bonuses timing & factors
     // TODO 10 levels
@@ -171,13 +173,15 @@ class App extends React.Component<IAppProps, IGameState> {
 
     public newGame = (): void => {
         this.rules = [
-            bombsMovement, bombSpawn, handsMovements, bombOutOfBounds, crossesMovements, bombCatch, levelProgress
+            bombsMovement, bombSpawn, handsMovements, bombOutOfBounds, crossesMovements, bombCatch, levelProgress,
+            bonusSpawns, bonusMoves
         ]
         const [ firstLevel, ...rest ] = Campaign.levels
         this.setState({
             lives: 5,
             bombs: [],
             crosses: [],
+            bonuses: [],
             gameTime: 0,
             deltaTime: 0,
             level: prepareLevel(firstLevel),
@@ -192,13 +196,19 @@ class App extends React.Component<IAppProps, IGameState> {
     }
 
     public render() {
-        const { hands, bucket, bombs, crosses, lives, settings, level = { ref: { name: 'Game' } }, debug, stats } = this.state
+        const { hands, bucket, bombs, bonuses, crosses, lives, settings, level = { ref: { name: 'Game' } }, debug, stats } = this.state
         return (
             <>
                 <Game width={settings.width} height={settings.height}>
                     <Hands {...hands} debug={debug.collisions}/>
                     {bombs.map((b, i) => <Bomb {...b} key={i} debug={debug.collisions}/>)}
                     {crosses.map((c, i) => <Explosion {...c} key={i}/>)}
+
+                    {/** move to standalone component */}
+                    {bonuses.map((b, i) => {
+                        return <DoubleScore {...b} key={i}/>
+                    })}
+
                     {new Array(lives).fill(0).map((_, i) => <Life y={20} x={settings.width - (i + 1) * 36} w={32} h={32}
                                                                   key={i}/>)}
 

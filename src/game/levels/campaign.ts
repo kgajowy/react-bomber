@@ -6,6 +6,7 @@ const levelOne: ILevel = {
         { time: 0, x: 50 },
         { time: 2000, x: 30 },
         { time: 5000, x: 70 },
+        { time: 1000, drop: DropTypes.BonusDoubleScore, speed: 300},
         ...new Array(5000/500).fill(0).map((_, i) => ({time: i*500, drop: DropTypes.Bomb, speed: 150})),
     ]
 }
@@ -16,6 +17,7 @@ const levelTwo: ILevel = {
         { time: 0, x: 50 },
         { time: 2000, x: 30 },
         { time: 5000, x: 70 },
+        { time: 2300, drop: DropTypes.BonusDoubleScore, speed: 300},
         ...new Array(5000/500).fill(0).map((_, i) => ({time: i*500, drop: DropTypes.Bomb, speed: 150})),
     ]
 }

@@ -11,3 +11,4 @@ export function isMoveEvent(event: IEvent): event is IMove {
 export function isBombEvent({drop}: IDrop) : boolean {
     return drop === DropTypes.Bomb
 }
+

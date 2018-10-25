@@ -15,7 +15,7 @@ export const prepareLevel = (source: ILevel) : IRunningLevel => {
         ref: source,
         spawns: {
             bombs: source.triggers.filter(event => isDropEvent(event) && isBombEvent(event)) as IDrop[],
-            bonuses: [],
+            bonuses: source.triggers.filter(event => isDropEvent(event) && !isBombEvent(event)) as IDrop[]
         },
         moves: source.triggers.filter(event => isMoveEvent(event)) as IMove[],
     }

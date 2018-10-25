@@ -1,5 +1,6 @@
 export enum DropTypes {
-    Bomb
+    Bomb,
+    BonusDoubleScore,
 }
 
 export interface IEvent {
