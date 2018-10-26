@@ -18,7 +18,8 @@ export default ({ gameTime, bonuses, hands, level }: IGameState): Partial<IGameS
                 speed: nextEvent.speed,
                 direction: Direction.Down,
                 w: DoubleScoreSprite.w,
-                h: DoubleScoreSprite.h
+                h: DoubleScoreSprite.h,
+                drop: nextEvent.drop,
             } ],
             level: { ...level, spawns: { ...level.spawns, bombs: level.spawns.bombs } }
         }

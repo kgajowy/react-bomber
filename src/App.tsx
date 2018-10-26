@@ -9,7 +9,9 @@ import {
     bombCatch,
     bombOutOfBounds,
     bombs as bombsMovement,
-    bombSpawn, bonusMoves, bonusSpawns,
+    bombSpawn,
+    bonusMoves,
+    bonusSpawns,
     crossesMovements,
     hands as handsMovements,
     levelProgress
@@ -19,10 +21,17 @@ import { Campaign } from './game/levels/campaign'
 import { ILevel } from './game/levels/level'
 import { IRunningLevel, prepareLevel } from './game/levels/util'
 import { ISprite } from './game/util/sprite'
+import { ISpriteGatherable } from './game/util/sprite-gatherable'
 import { PlayButton } from './menu/PlayButton'
 
 export interface IAppProps {
     debugMode: boolean
+}
+
+export interface IActiveBonus {
+    value: number
+    createdAt: number
+    expires: number
 }
 
 export interface IGameState {
@@ -34,7 +43,7 @@ export interface IGameState {
     hands: ISprite,
     bombs: ISprite[],
     crosses: ISprite[],
-    bonuses: ISprite[],
+    bonuses: ISpriteGatherable[],
     lives: number,
     settings: {
         width: number,
@@ -46,6 +55,10 @@ export interface IGameState {
         bombsCaught: number,
         bombsMissed: number,
         points: number,
+    },
+    factors: {
+        score: IActiveBonus,
+        bombSpeed: IActiveBonus,
     },
     won: boolean,
     debug: {
@@ -94,6 +107,18 @@ class App extends React.Component<IAppProps, IGameState> {
                 bombsCaught: 0,
                 bombsMissed: 0,
                 points: 0,
+            },
+            factors: {
+                bombSpeed: {
+                    createdAt: 0,
+                    expires: 0,
+                    value: 1,
+                },
+                score: {
+                    createdAt: 0,
+                    expires: 0,
+                    value: 1,
+                },
             },
             debug: {
                 collisions: false,
@@ -153,8 +178,6 @@ class App extends React.Component<IAppProps, IGameState> {
 
     // TODO background & misc graphics ?
 
-    // TODO bonuses collisions
-    // TODO bonuses timing & factors
     // TODO 10 levels
     // TODO menu
 
@@ -191,6 +214,18 @@ class App extends React.Component<IAppProps, IGameState> {
                 bombsMissed: 0,
                 points: 0,
             },
+            factors: {
+                bombSpeed: {
+                    createdAt: 0,
+                    expires: 0,
+                    value: 1,
+                },
+                score: {
+                    createdAt: 0,
+                    expires: 0,
+                    value: 1,
+                },
+            },
         })
 
     }
@@ -203,8 +238,6 @@ class App extends React.Component<IAppProps, IGameState> {
                     <Hands {...hands} debug={debug.collisions}/>
                     {bombs.map((b, i) => <Bomb {...b} key={i} debug={debug.collisions}/>)}
                     {crosses.map((c, i) => <Explosion {...c} key={i}/>)}
-
-                    {/** move to standalone component */}
                     {bonuses.map((b, i) => {
                         return <DoubleScore {...b} key={i}/>
                     })}
@@ -213,7 +246,8 @@ class App extends React.Component<IAppProps, IGameState> {
                                                                   key={i}/>)}
 
                     {<text x="20" y="30">{level.ref.name}</text>}
-                    {<text x="20" y="50">{stats.points} (acc {((100 * stats.bombsCaught/(stats.bombsMissed+stats.bombsCaught)) || 100).toFixed(2)} %)</text>}
+                    {<text x="20"
+                           y="50">{stats.points} (acc {((100 * stats.bombsCaught / (stats.bombsMissed + stats.bombsCaught)) || 100).toFixed(2)} %)</text>}
                     <Bucket {...bucket} debug={debug.collisions}/>
                 </Game>
                 {lives === 0 &&
