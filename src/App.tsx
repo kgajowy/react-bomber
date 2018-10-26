@@ -176,15 +176,6 @@ class App extends React.Component<IAppProps, IGameState> {
         this.newGame()
     }
 
-    // TODO background & misc graphics ?
-
-    // TODO 10 levels
-    // TODO menu
-
-    // TODO v.1.1
-    // TODO user levels (cpy paste)
-    // TODO contributors levels
-
     public onMouseMove = ({ screenX }: MouseEvent): void => {
         this.setState({
             bucket: {
