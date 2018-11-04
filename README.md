@@ -1,6 +1,6 @@
 # TODOS before beta-release
 
-- [ ] bonus configurable active time
+- [x] bonus configurable active time
 - [ ] bonus activity timer (shrinking horizontal bar?)
 - [ ] unify/fuse rules related to A) movements B) spawns C) destroys [refactor]
 - [ ] background & misc graphics ?

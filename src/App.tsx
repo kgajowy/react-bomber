@@ -222,7 +222,7 @@ class App extends React.Component<IAppProps, IGameState> {
     }
 
     public render() {
-        const { hands, bucket, bombs, bonuses, crosses, lives, settings, level = { ref: { name: 'Game' } }, debug, stats } = this.state
+        const { hands, bucket, bombs, bonuses, crosses, lives, settings, level = { ref: { name: 'Game' } }, debug, stats, factors, gameTime } = this.state
         return (
             <>
                 <Game width={settings.width} height={settings.height}>
@@ -239,7 +239,10 @@ class App extends React.Component<IAppProps, IGameState> {
                     {<text x="20" y="30">{level.ref.name}</text>}
                     {<text x="20"
                            y="50">{stats.points} (acc {((100 * stats.bombsCaught / (stats.bombsMissed + stats.bombsCaught)) || 100).toFixed(2)} %)</text>}
-                    <Bucket {...bucket} debug={debug.collisions}/>
+
+                    {<text x="20" y="70">Bonus time left: {Math.max(0, factors.score.expires - gameTime)}</text>}
+
+                           <Bucket {...bucket} debug={debug.collisions}/>
                 </Game>
                 {lives === 0 &&
                 <div style={{

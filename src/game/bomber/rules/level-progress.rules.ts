@@ -1,5 +1,6 @@
 import { IGameState } from '../../../App'
 import { prepareLevel } from '../../levels/util'
+import { resetBonuses } from './helpers/reset-bonuses'
 
 export default ({ bombs, level, levels }: IGameState): Partial<IGameState> => {
     if (!level) {
@@ -23,6 +24,7 @@ export default ({ bombs, level, levels }: IGameState): Partial<IGameState> => {
                 level: prepareLevel(nextLevel),
                 levels: rest,
                 gameTime: 0,
+                ...resetBonuses()
             }
         }
 

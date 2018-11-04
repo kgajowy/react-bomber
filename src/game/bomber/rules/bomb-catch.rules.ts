@@ -32,9 +32,10 @@ export default ({ bombs, bucket, stats, bonuses, factors, gameTime }: IGameState
         if (!spriteCollides(b, bucket)) {
             keptBonuses.push(b)
         } else {
-            if (b.drop === DropTypes.BonusDoubleScore) {
+            console.log(`sprite collision`, b)
+            if (b.drop.drop === DropTypes.BonusDoubleScore) {
                 doubleScoreBonus.value = 2
-                doubleScoreBonus.expires = gameTime + 3000  // TODO let it be configurable
+                doubleScoreBonus.expires = gameTime + (b.drop.duration || 0)
             }
         }
     }

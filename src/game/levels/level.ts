@@ -28,6 +28,10 @@ export interface IDrop extends IEvent {
      */
     speed: number,
 
+    /**
+     * @duration - how many ms will the bonus last
+     */
+    duration?: number,
 }
 
 export type EventTypes = IDrop | IMove

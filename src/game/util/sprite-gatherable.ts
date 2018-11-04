@@ -1,6 +1,7 @@
-import { DropTypes } from '../levels/level'
+import { IDrop } from '../levels/level'
 import { ISprite } from './sprite'
 
 export interface ISpriteGatherable extends ISprite {
-    drop: DropTypes
+    drop: IDrop
+
 }
