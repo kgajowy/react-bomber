@@ -5,7 +5,8 @@
 - [x] unify/fuse rules related to A) movements B) spawns ~C) destroys~ [refactor]
 - [ ] background & misc graphics ?
 - [x] shake effect on bomb explosion
-- [ ] think of some nice effect for collecting the bonus
+- [x] think of some nice effect for collecting the bonus
+- [ ] rain drops when catching bombs
 - [ ] 10 levels
 - [ ] menu
 - [ ] fix: replace screenX with something more suitable

@@ -1,7 +1,9 @@
 import { IActiveBonus, IGameState } from '../../../App'
 import { DropTypes } from '../../levels/level'
+import { Direction } from '../../util/direction'
 import { ISprite } from '../../util/sprite'
 import { ISpriteGatherable } from '../../util/sprite-gatherable'
+import { StarSprite } from '../star/Star'
 
 const spriteCollides = (sprite: ISprite, bucket: ISprite) =>
     sprite.x + sprite.w / 2 >= bucket.x - bucket.w / 2 &&
@@ -13,9 +15,10 @@ const getBonusValue = (bonus: IActiveBonus, gameTime: number) => {
     return bonus.expires < gameTime ? 1 : bonus.value
 }
 
-export default ({ bombs, bucket, stats, bonuses, factors, gameTime }: IGameState): Partial<IGameState> => {
+export default ({ bombs, bucket, stats, bonuses, factors, gameTime, stars }: IGameState): Partial<IGameState> => {
     const newBombs: ISprite[] = []
     const keptBonuses: ISpriteGatherable[] = []
+    let newStars: ISprite[] = []
 
     const doubleScoreBonus = factors.score
 
@@ -32,10 +35,27 @@ export default ({ bombs, bucket, stats, bonuses, factors, gameTime }: IGameState
         if (!spriteCollides(b, bucket)) {
             keptBonuses.push(b)
         } else {
-            console.log(`sprite collision`, b)
             if (b.drop.drop === DropTypes.BonusDoubleScore) {
                 doubleScoreBonus.value = 2
                 doubleScoreBonus.expires = gameTime + (b.drop.duration || 0)
+                newStars = [...newStars, {
+                    x: b.x - StarSprite.w/2,
+                    y: b.y,
+                    w: StarSprite.w,
+                    h: StarSprite.h,
+                    direction: Direction.Left
+                }, {
+                    x: b.x,
+                    y: b.y,
+                    w: StarSprite.w,
+                    h: StarSprite.h,
+                }, {
+                    x: b.x +  StarSprite.w/2 ,
+                    y: b.y,
+                    w: StarSprite.w,
+                    h: StarSprite.h,
+                    direction: Direction.Right
+                }]
             }
         }
     }
@@ -53,5 +73,6 @@ export default ({ bombs, bucket, stats, bonuses, factors, gameTime }: IGameState
             ...stats,
         },
         bonuses: keptBonuses,
+        stars: [ ...stars, ...newStars ]
     }
 }

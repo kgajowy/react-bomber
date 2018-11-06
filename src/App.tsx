@@ -15,6 +15,7 @@ import {
     spritesCreation,
     spritesMoves,
 } from './game/bomber/rules'
+import { Star } from './game/bomber/star/Star'
 import Game from './game/Game'
 import { Campaign } from './game/levels/campaign'
 import { ILevel } from './game/levels/level'
@@ -43,6 +44,7 @@ export interface IGameState {
     hands: ISprite,
     bombs: ISprite[],
     crosses: ISprite[],
+    stars: ISprite[],
     bonuses: ISpriteGatherable[],
     lives: number,
     settings: {
@@ -104,6 +106,7 @@ class App extends React.Component<IAppProps, IGameState> {
             },
             bombs: [],
             crosses: [],
+            stars: [],
             bonuses: [],
             levels: Campaign.levels,
             level: undefined,
@@ -206,6 +209,7 @@ class App extends React.Component<IAppProps, IGameState> {
             bombs: [],
             crosses: [],
             bonuses: [],
+            stars: [],
             gameTime: 0,
             deltaTime: 0,
             level: prepareLevel(firstLevel),
@@ -234,7 +238,7 @@ class App extends React.Component<IAppProps, IGameState> {
     }
 
     public render() {
-        const { hands, bucket, bombs, bonuses, crosses, lives, settings, level = { ref: { name: 'Game' } }, debug, stats, factors, gameTime, shake } = this.state
+        const { hands, bucket, bombs, bonuses, crosses, stars, lives, settings, level = { ref: { name: 'Game' } }, debug, stats, factors, gameTime, shake } = this.state
         return (
             <>
                 <Game width={settings.width} height={settings.height}>
@@ -242,6 +246,7 @@ class App extends React.Component<IAppProps, IGameState> {
                         <Hands {...hands} debug={debug.collisions}/>
                         {bombs.map((b, i) => <Bomb {...b} key={i} debug={debug.collisions}/>)}
                         {crosses.map((c, i) => <Explosion {...c} key={i}/>)}
+                        {stars.map((c, i) => <Star {...c} key={i}/>)}
                         {bonuses.map((b, i) => {
                             return <DoubleScore {...b} key={i}/>
                         })}
