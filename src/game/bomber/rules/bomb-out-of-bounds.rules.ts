@@ -3,10 +3,11 @@ import { ISprite } from '../../util/sprite'
 import { ISpriteGatherable } from '../../util/sprite-gatherable'
 import { CrossSprite } from '../bomb/Explosion'
 
-export default ({ bombs, crosses, settings, lives, stats, bonuses }: IGameState): Partial<IGameState> => {
+export default ({ bombs, crosses, settings, lives, stats, bonuses, shake }: IGameState): Partial<IGameState> => {
     const newBombs : ISprite[] = []
     const keptBonuses: ISpriteGatherable[] = bonuses.filter(b => b.y < settings.height - 20)
     const newCrosses: ISprite[] = []
+    let triggerShake = false
 
     for (const b of bombs) {
         if (b.y > settings.height-20) {
@@ -18,6 +19,7 @@ export default ({ bombs, crosses, settings, lives, stats, bonuses }: IGameState)
             })
             --lives
             ++stats.bombsMissed
+            triggerShake = true
         } else {
             newBombs.push(b)
         }
@@ -31,5 +33,9 @@ export default ({ bombs, crosses, settings, lives, stats, bonuses }: IGameState)
             ...stats,
         },
         bonuses: keptBonuses,
+        shake: {
+            ...shake,
+            start: triggerShake,
+        }
     }
 }

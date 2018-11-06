@@ -9,6 +9,7 @@ import { Life } from './game/bomber/life/Life'
 import {
     bombCatch,
     bombOutOfBounds,
+    effects,
     hands as handsMovements,
     levelProgress,
     spritesCreation,
@@ -18,6 +19,7 @@ import Game from './game/Game'
 import { Campaign } from './game/levels/campaign'
 import { ILevel } from './game/levels/level'
 import { IRunningLevel, prepareLevel } from './game/levels/util'
+import Shake from './game/util/Shake'
 import { ISprite } from './game/util/sprite'
 import { ISpriteGatherable } from './game/util/sprite-gatherable'
 import { PlayButton } from './menu/PlayButton'
@@ -61,6 +63,11 @@ export interface IGameState {
     won: boolean,
     debug: {
         collisions: boolean,
+    },
+    shake: {
+        x: number,
+        y: number,
+        start: boolean,
     }
 }
 
@@ -120,6 +127,11 @@ class App extends React.Component<IAppProps, IGameState> {
             },
             debug: {
                 collisions: false,
+            },
+            shake: {
+                x: 0,
+                y: 0,
+                start: false,
             }
         }
     }
@@ -186,7 +198,7 @@ class App extends React.Component<IAppProps, IGameState> {
     public newGame = (): void => {
         this.rules = [
             handsMovements, bombOutOfBounds, bombCatch, levelProgress,
-            spritesCreation, spritesMoves
+            spritesCreation, spritesMoves, effects
         ]
         const [ firstLevel, ...rest ] = Campaign.levels
         this.setState({
@@ -203,6 +215,9 @@ class App extends React.Component<IAppProps, IGameState> {
                 bombsMissed: 0,
                 points: 0,
             },
+            shake: {
+                x: 0, y: 0, start: false,
+            },
             factors: {
                 bombSpeed: {
                     createdAt: 0,
@@ -216,36 +231,36 @@ class App extends React.Component<IAppProps, IGameState> {
                 },
             },
         })
-
     }
 
     public render() {
-        const { hands, bucket, bombs, bonuses, crosses, lives, settings, level = { ref: { name: 'Game' } }, debug, stats, factors, gameTime } = this.state
+        const { hands, bucket, bombs, bonuses, crosses, lives, settings, level = { ref: { name: 'Game' } }, debug, stats, factors, gameTime, shake } = this.state
         return (
             <>
                 <Game width={settings.width} height={settings.height}>
-                    <Hands {...hands} debug={debug.collisions}/>
-                    {bombs.map((b, i) => <Bomb {...b} key={i} debug={debug.collisions}/>)}
-                    {crosses.map((c, i) => <Explosion {...c} key={i}/>)}
-                    {bonuses.map((b, i) => {
-                        return <DoubleScore {...b} key={i}/>
-                    })}
+                    <Shake {...shake}>
+                        <Hands {...hands} debug={debug.collisions}/>
+                        {bombs.map((b, i) => <Bomb {...b} key={i} debug={debug.collisions}/>)}
+                        {crosses.map((c, i) => <Explosion {...c} key={i}/>)}
+                        {bonuses.map((b, i) => {
+                            return <DoubleScore {...b} key={i}/>
+                        })}
 
-                    {new Array(lives).fill(0).map((_, i) => <Life y={20} x={settings.width - (i + 1) * 36} w={32} h={32}
-                                                                  key={i}/>)}
+                        {new Array(lives).fill(0).map((_, i) => <Life y={20} x={settings.width - (i + 1) * 36} w={32}
+                                                                      h={32}
+                                                                      key={i}/>)}
 
-                    {<text x="20" y="30">{level.ref.name}</text>}
-                    {<text x="20"
-                           y="50">{stats.points} (acc {((100 * stats.bombsCaught / (stats.bombsMissed + stats.bombsCaught)) || 100).toFixed(2)} %)</text>}
-
-
-                    <BonusActivityBar maxWidth={settings.width}
-                                      percentageFill={(factors.score.expires - gameTime) / (factors.score.expires - factors.score.createdAt)}
-                                      timeLeft={Math.max(0, factors.score.expires - gameTime)}
-                                      height={settings.height / 2}/>
+                        {<text x="20" y="30">{level.ref.name}</text>}
+                        {<text x="20"
+                               y="50">{stats.points} (acc {((100 * stats.bombsCaught / (stats.bombsMissed + stats.bombsCaught)) || 100).toFixed(2)} %)</text>}
 
 
-                    <Bucket {...bucket} debug={debug.collisions}/>
+                        <BonusActivityBar maxWidth={settings.width}
+                                          percentageFill={(factors.score.expires - gameTime) / (factors.score.expires - factors.score.createdAt)}
+                                          timeLeft={Math.max(0, factors.score.expires - gameTime)}
+                                          height={settings.height / 2}/>
+                        <Bucket {...bucket} debug={debug.collisions}/>
+                    </Shake>
                 </Game>
                 {lives === 0 &&
                 <div style={{
