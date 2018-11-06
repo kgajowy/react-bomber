@@ -9,13 +9,10 @@ import { Life } from './game/bomber/life/Life'
 import {
     bombCatch,
     bombOutOfBounds,
-    bombs as bombsMovement,
-    bombSpawn,
-    bonusMoves,
-    bonusSpawns,
-    crossesMovements,
     hands as handsMovements,
-    levelProgress
+    levelProgress,
+    spritesCreation,
+    spritesMoves,
 } from './game/bomber/rules'
 import Game from './game/Game'
 import { Campaign } from './game/levels/campaign'
@@ -188,8 +185,8 @@ class App extends React.Component<IAppProps, IGameState> {
 
     public newGame = (): void => {
         this.rules = [
-            bombsMovement, bombSpawn, handsMovements, bombOutOfBounds, crossesMovements, bombCatch, levelProgress,
-            bonusSpawns, bonusMoves
+            handsMovements, bombOutOfBounds, bombCatch, levelProgress,
+            spritesCreation, spritesMoves
         ]
         const [ firstLevel, ...rest ] = Campaign.levels
         this.setState({
@@ -242,14 +239,13 @@ class App extends React.Component<IAppProps, IGameState> {
                            y="50">{stats.points} (acc {((100 * stats.bombsCaught / (stats.bombsMissed + stats.bombsCaught)) || 100).toFixed(2)} %)</text>}
 
 
-
                     <BonusActivityBar maxWidth={settings.width}
-                                      percentageFill={(factors.score.expires - gameTime)/(factors.score.expires - factors.score.createdAt)}
+                                      percentageFill={(factors.score.expires - gameTime) / (factors.score.expires - factors.score.createdAt)}
                                       timeLeft={Math.max(0, factors.score.expires - gameTime)}
-                                      height={settings.height/2}/>
+                                      height={settings.height / 2}/>
 
 
-                           <Bucket {...bucket} debug={debug.collisions}/>
+                    <Bucket {...bucket} debug={debug.collisions}/>
                 </Game>
                 {lives === 0 &&
                 <div style={{
@@ -270,7 +266,7 @@ class App extends React.Component<IAppProps, IGameState> {
     }
 
     private stopGame = (): void => {
-        this.rules = [ bombsMovement, bombOutOfBounds, crossesMovements ] // even tho its game over, keep some moves
+        this.rules = [ bombOutOfBounds, spritesMoves ] // even tho its game over, keep some moves
     }
 
 

@@ -2,7 +2,7 @@
 
 - [x] bonus configurable active time
 - [x] bonus activity timer (shrinking horizontal bar?)
-- [ ] unify/fuse rules related to A) movements B) spawns C) destroys [refactor]
+- [x] unify/fuse rules related to A) movements B) spawns ~C) destroys~ [refactor]
 - [ ] background & misc graphics ?
 - [ ] shake effect on bomb explosion
 - [ ] think of some nice effect for collecting the bonus
