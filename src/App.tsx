@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Bomb } from './game/bomber/bomb/Bomb'
 import { Explosion } from './game/bomber/bomb/Explosion'
+import { BonusActivityBar } from './game/bomber/bonus/BonusActivityBar'
 import { DoubleScore } from './game/bomber/bonus/DoubleScore'
 import { Bucket } from './game/bomber/bucket/Bucket'
 import { Hands } from './game/bomber/hands/Hands'
@@ -240,7 +241,13 @@ class App extends React.Component<IAppProps, IGameState> {
                     {<text x="20"
                            y="50">{stats.points} (acc {((100 * stats.bombsCaught / (stats.bombsMissed + stats.bombsCaught)) || 100).toFixed(2)} %)</text>}
 
-                    {<text x="20" y="70">Bonus time left: {Math.max(0, factors.score.expires - gameTime)}</text>}
+
+
+                    <BonusActivityBar maxWidth={settings.width}
+                                      percentageFill={(factors.score.expires - gameTime)/(factors.score.expires - factors.score.createdAt)}
+                                      timeLeft={Math.max(0, factors.score.expires - gameTime)}
+                                      height={settings.height/2}/>
+
 
                            <Bucket {...bucket} debug={debug.collisions}/>
                 </Game>
