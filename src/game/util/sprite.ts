@@ -10,4 +10,5 @@ export interface ISprite {
     direction?: Direction
     speed?: number
     debug?: boolean
+    angle?: number
 }

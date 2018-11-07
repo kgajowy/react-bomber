@@ -11,13 +11,7 @@ const starMoveX = (deltaTime: number, currentX: number, direction: Direction = D
     }
 }
 
-export default ({ deltaTime, crosses, settings, bonuses, bombs, stars }: IGameState): Partial<IGameState> => ({
-    crosses: crosses.map(({scale = 1, y, opacity = 1, ...rest}) => ({
-        ...rest,
-        y: y - scale * (deltaTime / 50),
-        scale: scale + deltaTime/300,
-        opacity: opacity - (0.35/deltaTime),
-    })).filter((c => c.y > settings.height - 250)),
+export default ({ deltaTime, settings, bonuses, bombs, sprites }: IGameState): Partial<IGameState> => ({
     bonuses: bonuses.map(b => ({
         ...b,
         y: b.y + (b.speed || 50) * deltaTime / 1000
@@ -26,11 +20,32 @@ export default ({ deltaTime, crosses, settings, bonuses, bombs, stars }: IGameSt
         ...b,
         y: b.y + (b.speed || 50) * deltaTime / 1000
     })),
-    stars: stars.map(({speed = 50, x, y, direction, opacity = 1, ...rest}) => ({
-        ...rest,
-        y: y - speed * deltaTime / 1000,
-        x: starMoveX(deltaTime, x, direction, speed),
-        opacity: opacity - (0.35/deltaTime),
-        direction,
-    }))
+    sprites: {
+        ...sprites,
+        misc: {
+            ...sprites.misc,
+            crosses: sprites.misc.crosses.map(({scale = 1, y, opacity = 1, ...rest}) => ({
+                ...rest,
+                y: y - scale * (deltaTime / 50),
+                scale: scale + deltaTime/300,
+                opacity: opacity - (0.35/deltaTime)
+            })),
+            stars: sprites.misc.stars.map(({speed = 50, x, y, direction, opacity = 1, ...rest}) => ({
+                ...rest,
+                y: y - speed * deltaTime / 1000,
+                x: starMoveX(deltaTime, x, direction, speed),
+                opacity: opacity - (0.35/deltaTime),
+                direction,
+                speed
+            })),
+            drops: sprites.misc.drops.map(({speed = 100, x, y, direction, opacity = 1, ...rest}) => ({
+                ...rest,
+                y: y - speed * deltaTime / 1000,
+                x: starMoveX(deltaTime, x, direction, speed),
+                opacity: opacity - (0.35/deltaTime),
+                direction,
+                speed
+            })),
+        }
+    }
 })

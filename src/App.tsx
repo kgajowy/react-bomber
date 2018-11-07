@@ -4,6 +4,7 @@ import { Explosion } from './game/bomber/bomb/Explosion'
 import { BonusActivityBar } from './game/bomber/bonus/BonusActivityBar'
 import { DoubleScore } from './game/bomber/bonus/DoubleScore'
 import { Bucket } from './game/bomber/bucket/Bucket'
+import { WaterDrop } from './game/bomber/drops/WaterDrop'
 import { Hands } from './game/bomber/hands/Hands'
 import { Life } from './game/bomber/life/Life'
 import {
@@ -13,8 +14,9 @@ import {
     hands as handsMovements,
     levelProgress,
     spritesCreation,
-    spritesMoves,
+    spritesMoves, spritesRemoval,
 } from './game/bomber/rules'
+import { resetMiscSprites } from './game/bomber/rules/helpers/reset-misc-sprites'
 import { Star } from './game/bomber/star/Star'
 import Game from './game/Game'
 import { Campaign } from './game/levels/campaign'
@@ -35,6 +37,12 @@ export interface IActiveBonus {
     expires: number
 }
 
+export interface IMiscSprites {
+    stars: ISprite[]
+    drops: ISprite[]
+    crosses: ISprite[]
+}
+
 export interface IGameState {
     running: boolean,
     time: number,
@@ -43,8 +51,9 @@ export interface IGameState {
     bucket: ISprite,
     hands: ISprite,
     bombs: ISprite[],
-    crosses: ISprite[],
-    stars: ISprite[],
+    sprites: {
+        misc: IMiscSprites
+    }
     bonuses: ISpriteGatherable[],
     lives: number,
     settings: {
@@ -105,8 +114,9 @@ class App extends React.Component<IAppProps, IGameState> {
                 h: 48,
             },
             bombs: [],
-            crosses: [],
-            stars: [],
+            sprites: {
+                misc: resetMiscSprites(),
+            },
             bonuses: [],
             levels: Campaign.levels,
             level: undefined,
@@ -201,17 +211,18 @@ class App extends React.Component<IAppProps, IGameState> {
     public newGame = (): void => {
         this.rules = [
             handsMovements, bombOutOfBounds, bombCatch, levelProgress,
-            spritesCreation, spritesMoves, effects
+            spritesCreation, spritesMoves, effects, spritesRemoval
         ]
         const [ firstLevel, ...rest ] = Campaign.levels
         this.setState({
             lives: 5,
             bombs: [],
-            crosses: [],
             bonuses: [],
-            stars: [],
             gameTime: 0,
             deltaTime: 0,
+            sprites: {
+                misc: resetMiscSprites(),
+            },
             level: prepareLevel(firstLevel),
             levels: rest,
             stats: {
@@ -238,15 +249,18 @@ class App extends React.Component<IAppProps, IGameState> {
     }
 
     public render() {
-        const { hands, bucket, bombs, bonuses, crosses, stars, lives, settings, level = { ref: { name: 'Game' } }, debug, stats, factors, gameTime, shake } = this.state
+        const { hands, bucket, bombs, bonuses, sprites, lives, settings, level = { ref: { name: 'Game' } }, debug, stats, factors, gameTime, shake } = this.state
         return (
             <>
                 <Game width={settings.width} height={settings.height}>
                     <Shake {...shake}>
                         <Hands {...hands} debug={debug.collisions}/>
+
+                        <Bucket {...bucket} debug={debug.collisions}/>
                         {bombs.map((b, i) => <Bomb {...b} key={i} debug={debug.collisions}/>)}
-                        {crosses.map((c, i) => <Explosion {...c} key={i}/>)}
-                        {stars.map((c, i) => <Star {...c} key={i}/>)}
+                        {sprites.misc.crosses.map((c, i) => <Explosion {...c} key={i}/>)}
+                        {sprites.misc.stars.map((c, i) => <Star {...c} key={i}/>)}
+                        {sprites.misc.drops.map((c, i) => <WaterDrop {...c} key={i}/>)}
                         {bonuses.map((b, i) => {
                             return <DoubleScore {...b} key={i}/>
                         })}
@@ -264,7 +278,6 @@ class App extends React.Component<IAppProps, IGameState> {
                                           percentageFill={(factors.score.expires - gameTime) / (factors.score.expires - factors.score.createdAt)}
                                           timeLeft={Math.max(0, factors.score.expires - gameTime)}
                                           height={settings.height / 2}/>
-                        <Bucket {...bucket} debug={debug.collisions}/>
                     </Shake>
                 </Game>
                 {lives === 0 &&
