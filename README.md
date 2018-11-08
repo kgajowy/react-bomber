@@ -7,10 +7,10 @@
 - [x] shake effect on bomb explosion
 - [x] think of some nice effect for collecting the bonus
 - [x] rain drops when catching bombs
-- [ ] remove both rain drops and stars when opacity is 0
+- [x] remove both rain drops and stars when opacity is 0
 - [ ] 10 levels
 - [ ] menu
-- [ ] fix: replace screenX with something more suitable
+- [x] fix: replace screenX with something more suitable
 - [ ] blog post about progress
 
 ## TODOs in social / after beta-release

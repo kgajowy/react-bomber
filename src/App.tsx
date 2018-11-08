@@ -199,11 +199,11 @@ class App extends React.Component<IAppProps, IGameState> {
         this.newGame()
     }
 
-    public onMouseMove = ({ screenX }: MouseEvent): void => {
+    public onMouseMove = ({ clientX }: MouseEvent): void => {
         this.setState({
             bucket: {
                 ...this.state.bucket,
-                x: screenX,
+                x: clientX,
             }
         })
     }
