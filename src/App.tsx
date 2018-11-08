@@ -7,6 +7,7 @@ import { Bucket } from './game/bomber/bucket/Bucket'
 import { WaterDrop } from './game/bomber/drops/WaterDrop'
 import { Hands } from './game/bomber/hands/Hands'
 import { Life } from './game/bomber/life/Life'
+import { Cloud } from './game/bomber/misc/Cloud'
 import {
     bombCatch,
     bombOutOfBounds,
@@ -41,6 +42,7 @@ export interface IMiscSprites {
     stars: ISprite[]
     drops: ISprite[]
     crosses: ISprite[]
+    clouds: ISprite[]
 }
 
 export interface IGameState {
@@ -106,12 +108,14 @@ class App extends React.Component<IAppProps, IGameState> {
                 y: 100,
                 w: 60,
                 h: 60,
+                speed: 0,
             },
             bucket: {
                 x: 350,
                 y: 450,
                 w: 48,
                 h: 48,
+                speed: 0,
             },
             bombs: [],
             sprites: {
@@ -254,7 +258,9 @@ class App extends React.Component<IAppProps, IGameState> {
             <>
                 <Game width={settings.width} height={settings.height}>
                     <Shake {...shake}>
+
                         <Hands {...hands} debug={debug.collisions}/>
+                        {sprites.misc.clouds.map((c, i) => <Cloud {...c} key={i}/>)}
 
                         <Bucket {...bucket} debug={debug.collisions}/>
                         {bombs.map((b, i) => <Bomb {...b} key={i} debug={debug.collisions}/>)}
@@ -267,6 +273,7 @@ class App extends React.Component<IAppProps, IGameState> {
 
                         {new Array(lives).fill(0).map((_, i) => <Life y={20} x={settings.width - (i + 1) * 36} w={32}
                                                                       h={32}
+                                                                      speed={0}
                                                                       key={i}/>)}
 
                         {<text x="20" y="30">{level.ref.name}</text>}
@@ -299,7 +306,7 @@ class App extends React.Component<IAppProps, IGameState> {
     }
 
     private stopGame = (): void => {
-        this.rules = [ bombOutOfBounds, spritesMoves ] // even tho its game over, keep some moves
+        this.rules = [ bombOutOfBounds, spritesMoves, effects ] // even tho its game over, keep some moves
     }
 
 

@@ -30,7 +30,7 @@ export default ({ deltaTime, settings, bonuses, bombs, sprites }: IGameState): P
                 scale: scale + deltaTime/300,
                 opacity: opacity - (0.35/deltaTime)
             })),
-            stars: sprites.misc.stars.map(({speed = 50, x, y, direction, opacity = 1, ...rest}) => ({
+            stars: sprites.misc.stars.map(({speed, x, y, direction, opacity = 1, ...rest}) => ({
                 ...rest,
                 y: y - speed * deltaTime / 1000,
                 x: starMoveX(deltaTime, x, direction, speed),
@@ -38,7 +38,7 @@ export default ({ deltaTime, settings, bonuses, bombs, sprites }: IGameState): P
                 direction,
                 speed
             })),
-            drops: sprites.misc.drops.map(({speed = 100, x, y, direction, opacity = 1, ...rest}) => ({
+            drops: sprites.misc.drops.map(({speed, x, y, direction, opacity = 1, ...rest}) => ({
                 ...rest,
                 y: y - speed * deltaTime / 1000,
                 x: starMoveX(deltaTime, x, direction, speed),
@@ -46,6 +46,10 @@ export default ({ deltaTime, settings, bonuses, bombs, sprites }: IGameState): P
                 direction,
                 speed
             })),
+            clouds: sprites.misc.clouds.map(c => ({
+                ...c,
+                x: c.x - c.w > settings.width ? -c.w : c.x + (c.speed*deltaTime/1000)
+            }))
         }
     }
 })

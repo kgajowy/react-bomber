@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom'
 import App from './App'
 
 import bg from './game/bricks.png'
+import bgTop from './game/hills.png'
 import './index.css'
 import registerServiceWorker from './registerServiceWorker'
 
@@ -26,6 +27,15 @@ class AppWithBg extends React.Component {
                     backgroundImage: `url('${bg}')`,
                     backgroundSize: '200px',
                     top: 124,
+                    zIndex: -1,
+                }}/>
+                <div style={{
+                    position: 'absolute',
+                    width: '700px',
+                    height: '124px',
+                    backgroundImage: `url('${bgTop}')`,
+                    backgroundSize: 'cover',
+                    top: 0,
                     zIndex: -1,
                 }}/>
                 <label>Debug Mode</label>

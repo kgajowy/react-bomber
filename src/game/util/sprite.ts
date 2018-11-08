@@ -8,7 +8,7 @@ export interface ISprite {
     scale?: number
     opacity?: number
     direction?: Direction
-    speed?: number
+    speed: number
     debug?: boolean
     angle?: number
 }

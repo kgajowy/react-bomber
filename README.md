@@ -3,7 +3,7 @@
 - [x] bonus configurable active time
 - [x] bonus activity timer (shrinking horizontal bar?)
 - [x] unify/fuse rules related to A) movements B) spawns ~C) destroys~ [refactor]
-- [ ] background & misc graphics ?
+- [x] background & misc graphics ?
 - [x] shake effect on bomb explosion
 - [x] think of some nice effect for collecting the bonus
 - [x] rain drops when catching bombs

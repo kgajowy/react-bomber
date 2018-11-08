@@ -101,18 +101,21 @@ export default ({ bombs, bucket, stats, bonuses, factors, gameTime, sprites }: I
                     y: b.y,
                     w: StarSprite.w,
                     h: StarSprite.h,
-                    direction: Direction.Left
+                    direction: Direction.Left,
+                    speed: 50,
                 }, {
                     x: b.x,
                     y: b.y,
                     w: StarSprite.w,
                     h: StarSprite.h,
+                    speed: 50,
                 }, {
                     x: b.x + StarSprite.w / 2,
                     y: b.y,
                     w: StarSprite.w,
                     h: StarSprite.h,
-                    direction: Direction.Right
+                    direction: Direction.Right,
+                    speed: 50,
                 } ]
             }
         }

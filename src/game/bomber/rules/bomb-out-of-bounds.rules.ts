@@ -16,6 +16,7 @@ export default ({ bombs, settings, lives, stats, bonuses, shake, sprites }: IGam
                 y: b.y,
                 w: CrossSprite.w,
                 h: CrossSprite.h,
+                speed: 100,
             })
             --lives
             ++stats.bombsMissed
