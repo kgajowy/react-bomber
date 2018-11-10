@@ -12,6 +12,18 @@ You can catch bonus (double score) to prove others you are better than them. No 
 
 ![Screenshot from game](bomber-trailer.png)
 
+# Features
+* possibility to configure levels - both hands moves and drops times & speed
+* bonuses (in-game: only double score 💯) - duration
+* lives ❤️
+* adding score & factors (bonuses)
+* shake effect on bomb 💣 explosion
+* bonus duration bar
+* water drops 💧 when bomb is caught
+* static sprites like ☁️
+* game state based on Rules
+* game lives inside SVG object
+
 # Game online
 https://kgajowy.github.io/bomber/
 
@@ -32,8 +44,8 @@ https://kgajowy.github.io/bomber/
 - [x] blog post about progress
 
 ## TODOs in social / after beta-release
-- [ ] list of in-game features
-- [ ] create promo materials
+- [x] list of in-game features
+- [x] create promo materials
 - [ ] blog-post
 
 # TODOs for v.1.1
