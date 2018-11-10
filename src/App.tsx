@@ -15,7 +15,8 @@ import {
     hands as handsMovements,
     levelProgress,
     spritesCreation,
-    spritesMoves, spritesRemoval,
+    spritesMoves,
+    spritesRemoval,
 } from './game/bomber/rules'
 import { resetMiscSprites } from './game/bomber/rules/helpers/reset-misc-sprites'
 import { Star } from './game/bomber/star/Star'
@@ -94,7 +95,7 @@ class App extends React.Component<IAppProps, IGameState> {
         super(props)
 
         this.state = {
-            running: true,
+            running: false,
             time: 0,
             gameTime: 0,
             deltaTime: 0,
@@ -199,8 +200,6 @@ class App extends React.Component<IAppProps, IGameState> {
             this.requestId = requestAnimationFrame(tick)
         }
         scheduleNextTick()
-
-        this.newGame()
     }
 
     public onMouseMove = ({ clientX }: MouseEvent): void => {
@@ -219,6 +218,7 @@ class App extends React.Component<IAppProps, IGameState> {
         ]
         const [ firstLevel, ...rest ] = Campaign.levels
         this.setState({
+            running: true,
             lives: 5,
             bombs: [],
             bonuses: [],
@@ -253,7 +253,7 @@ class App extends React.Component<IAppProps, IGameState> {
     }
 
     public render() {
-        const { hands, bucket, bombs, bonuses, sprites, lives, settings, level = { ref: { name: 'Game' } }, debug, stats, factors, gameTime, shake } = this.state
+        const { running, hands, bucket, bombs, bonuses, sprites, lives, settings, level = { ref: { name: 'Game' } }, debug, stats, factors, gameTime, shake } = this.state
         return (
             <>
                 <Game width={settings.width} height={settings.height}>
@@ -287,20 +287,22 @@ class App extends React.Component<IAppProps, IGameState> {
                                           height={settings.height / 2}/>
                     </Shake>
                 </Game>
-                {lives === 0 &&
+
                 <div style={{
                     position: 'absolute',
-                    top: window.innerHeight / 2,
+                    top: settings.height / 2,
                     left: 0,
                     width: settings.width,
+                    height: settings.height,
                     marginLeft: 'auto',
                     marginRight: 'auto',
                     textAlign: 'center',
                 }}>
-                    <PlayButton text={'Restart?'} onClick={this.newGame}/>
-
+                    {!running &&
+                        <PlayButton text={'Start new Game'} onClick={this.newGame}/>
+                    }
                 </div>
-                }
+
             </>
         )
     }

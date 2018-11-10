@@ -9,7 +9,7 @@
 - [x] rain drops when catching bombs
 - [x] remove both rain drops and stars when opacity is 0
 - [x] ~10~ 6 levels
-- [ ] menu
+- [x] menu
 - [x] fix: replace screenX with something more suitable
 - [x] blog post about progress
 

@@ -28,7 +28,7 @@ export default ({ bombs, settings, lives, stats, bonuses, shake, sprites }: IGam
 
     return {
         bombs: newBombs,
-
+        running: lives > 0,
         lives: Math.max(0, lives),
         stats: {
             ...stats,
