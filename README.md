@@ -10,7 +10,7 @@ You are a kind of policeman with bucket filled with water. Bad guy (prisoner) wa
 Game does not support mobile yet - mouse only. Game consists of 6 levels, starting very slowly but becoming desperate later on.
 You can catch bonus (double score) to prove others you are better than them. No more bonuses yet :(
 
-![Screenshot from game](bomber-trailer.jpg)
+![Screenshot from game](bomber-trailer.png)
 
 # Game online
 https://kgajowy.github.io/bomber/
