@@ -1,4 +1,22 @@
-# TODOS before beta-release
+# About
+The purpose of this project was to bring back 15-years-old memories. I once made a game for some contest which included so called "clicker" games - games made in `The Games Factory` (currently under brand of `Multimedia Fusion` (https://www.clickteam.com/clickteam-fusion-2-5))
+
+I was strongly inspired by [@mhagmajer](https://twitter.com/mhagmajer) and his Lighting talk during [WarsawJS](https://warsawjs.com) to write this one in React.
+
+# About the Game
+You are a kind of policeman with bucket filled with water. Bad guy (prisoner) wants to escape - thus he is dropping bombs in order to destroy the wall. Are you REACTive enough to stop him?
+
+# How to play
+Game does not support mobile yet - mouse only. Game consists of 6 levels, starting very slowly but becoming desperate later on.
+You can catch bonus (double score) to prove others you are better than them. No more bonuses yet :(
+
+[Screenshot from game](bomber-trailer.jpg?raw=true "Title")
+
+# Game online
+https://kgajowy.github.io/bomber/
+
+
+# ~TODOS before beta-release~
 
 - [x] bonus configurable active time
 - [x] bonus activity timer (shrinking horizontal bar?)
@@ -23,4 +41,5 @@
 - [ ] contributors levels
 
 # TODOs for v.1.2
+- [ ] additional bonuses (lifes, enlarge bucket)
 - [ ] achievements / gamification example
