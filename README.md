@@ -8,10 +8,10 @@
 - [x] think of some nice effect for collecting the bonus
 - [x] rain drops when catching bombs
 - [x] remove both rain drops and stars when opacity is 0
-- [ ] 10 levels
+- [x] ~10~ 6 levels
 - [ ] menu
 - [x] fix: replace screenX with something more suitable
-- [ ] blog post about progress
+- [x] blog post about progress
 
 ## TODOs in social / after beta-release
 - [ ] list of in-game features
