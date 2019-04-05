@@ -18,7 +18,8 @@ export default ({ deltaTime, settings, bonuses, bombs, sprites }: IGameState): P
     })),
     bombs: bombs.map(b => ({
         ...b,
-        y: b.y + (b.speed || 50) * deltaTime / 1000
+        y: b.y + (b.speed || 50) * deltaTime / 1000,
+        angle: (b.angle || 0) + (300 * deltaTime / 1000)
     })),
     sprites: {
         ...sprites,

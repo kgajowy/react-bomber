@@ -10,7 +10,7 @@ export const createSprite = (spriteSource: string, { x, y, w = 32, h = 32, debug
             width={w}
             {...rest}
             xlinkHref={spriteSource}
-            transform={rest.angle ? `rotate(${rest.angle} ${x + w/2} ${y + h/2})` : ''}
+            transform={rest.angle ? `rotate(${rest.angle} ${x} ${y})` : ''}
         />
 
         {debug && <rect width={w} height={h} x={x - w / 2} y={y - h / 2}

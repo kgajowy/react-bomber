@@ -13,5 +13,5 @@ export const BombSprite = {
 export const Bomb = (opts: ISprite) =>
     <>
         {createSprite(sprite, { ...opts, w: BombSprite.w, h: BombSprite.h, direction: Direction.Down, speed: 200 })}
-        {createSprite(spriteFire, { ...opts, w: BombSprite.w, h: BombSprite.h, direction: Direction.Down, speed: 200, debug: false })}
+        {createSprite(spriteFire, { ...opts, w: BombSprite.w, h: BombSprite.h, direction: Direction.Down, speed: 200 })}
     </>
